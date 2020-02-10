@@ -121,7 +121,7 @@ def reverseHexString(hexString) {
 // Parse open/close report
 private parseContact(closedOpen) {
     def value = ["closed", "open"]
-    def currentValue=device.currentState('contact').value
+    def currentValue=device.currentState('contact')? device.currentState('contact').value:null
     if (!currentValue || currentValue != value[closedOpen]) {
 	    def desc = ["closed", "opened"]
 	    def coreEvent = ["lastClosed", "lastOpened"]
