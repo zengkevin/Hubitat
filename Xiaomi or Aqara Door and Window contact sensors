@@ -33,7 +33,7 @@
  */
 
 metadata {
-	definition (name: "Xiaomi Door/Window Sensor", namespace: "veeceeoh", author: "veeceeoh") {
+	definition (name: "Xiaomi Door/Window Sensor", namespace: "veeceeoh", author: "veeceeoh and kvz") {
 		capability "Contact Sensor"
 		capability "Sensor"
 		capability "Battery"
@@ -120,17 +120,20 @@ def reverseHexString(hexString) {
 
 // Parse open/close report
 private parseContact(closedOpen) {
-	def value = ["closed", "open"]
-	def desc = ["closed", "opened"]
-	def coreEvent = ["lastClosed", "lastOpened"]
-	displayDebugLog("Setting ${coreEvent[closedOpen]} to current date/time for webCoRE")
-	sendEvent(name: coreEvent[closedOpen], value: now(), descriptionText: "Updated ${coreEvent[closedOpen]} (webCoRE)")
-	return [
-		name: 'contact',
-		value: value[closedOpen],
-		isStateChange: true,
-		descriptionText: "Contact was ${desc[closedOpen]}"
-	]
+    def value = ["closed", "open"]
+    def currentValue=device.currentState('contact').value
+    if (!currentValue || currentValue != value[closedOpen]) {
+	    def desc = ["closed", "opened"]
+	    def coreEvent = ["lastClosed", "lastOpened"]
+	    displayDebugLog("Setting ${coreEvent[closedOpen]} to current date/time for webCoRE")
+	    sendEvent(name: coreEvent[closedOpen], value: now(), descriptionText: "Updated ${coreEvent[closedOpen]} (webCoRE)")
+	    return [
+		    name: 'contact',
+		    value: value[closedOpen],
+		    isStateChange: true,
+		    descriptionText: "Contact was ${desc[closedOpen]}"
+	    ]
+    }
 }
 
 // Convert raw 4 digit integer voltage value into percentage based on minVolts/maxVolts range
