@@ -101,7 +101,7 @@ def parse(String description) {
 		displayDebugLog("Unable to parse message")
 	}
 
-	if (map != [:]) {
+	if (map && map != [:]) {
 		displayInfoLog(map.descriptionText)
 		displayDebugLog("Creating event $map")
 		return createEvent(map)
